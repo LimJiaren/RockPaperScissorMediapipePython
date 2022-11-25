@@ -21,8 +21,11 @@ count_down = 4
 start_count_down = False
 rps_result = None
 resultDisplay = None
+rps_display = None
 nowGesture = None
 winState = None
+x_offset=y_offset=0
+
 def rps():
     global count_down, start_count_down
     while count_down != 0:
@@ -43,6 +46,10 @@ cap = cv2.VideoCapture(0) # By default webcam is index 0
 
 # Load gesture recognition class
 gest = GestureRecognition(mode='eval')
+
+rock_img = cv2.imread("rock.png")
+paper_img = cv2.imread("paper.png")
+scissor_img = cv2.imread("scissor.png")
 
 while cap.isOpened():
     ret, img = cap.read()
@@ -77,9 +84,9 @@ while cap.isOpened():
         test.start()
         check_win = 1
         start_count_down = True
+        rps_display = None
         start_game = 2 
     if check_win == 1:
-        
         if count_down != 0:
             cv2.putText(img, str(count_down), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
         else:
@@ -87,6 +94,7 @@ while cap.isOpened():
             rps_result = random.choice(list1)
         if rps_result in ["rock", "paper", "scissor"]:
             if rps_result == "rock":
+                rps_display = "rock"
                 if nowGesture == "rock":
                     winState = "TIE"
                 if nowGesture == "paper":
@@ -94,6 +102,7 @@ while cap.isOpened():
                 if nowGesture == "scissor":
                     winState = "LOSE"
             elif rps_result == "paper":
+                rps_display = "paper"
                 if nowGesture == "rock":
                     winState = "LOSE"
                 if nowGesture == "paper":
@@ -101,6 +110,7 @@ while cap.isOpened():
                 if nowGesture == "scissor":
                     winState = "WIN"
             else:
+                rps_display = "scissor"
                 if nowGesture == "rock":
                     winState = "WIN"
                 if nowGesture == "paper":
@@ -114,12 +124,29 @@ while cap.isOpened():
             start_count_down = False
             start_game = 0
             check_win = 0
+
     
-    cv2.putText(img, (f"BOT:{resultDisplay}"), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
-    cv2.putText(img, (f"YOU {winState}"), (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+
+    # cv2.putText(img, (f"BOT:{resultDisplay}"), (400, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+    cv2.putText(img, (f"YOU {winState}"), (400, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
     print(f"LOGS: checkwin:{check_win} , start_game:{start_game}, count_down:{count_down}, start_count_down:{start_count_down}")
     img.flags.writeable = True
 
+    if count_down != 0:
+        temp = random.randint(1, 3)
+        if temp == 1: 
+            img[y_offset:y_offset+rock_img.shape[0], x_offset:x_offset+rock_img.shape[1]] = rock_img
+        if temp == 2:
+            img[y_offset:y_offset+paper_img.shape[0], x_offset:x_offset+paper_img.shape[1]] = paper_img
+        if temp == 3:
+            img[y_offset:y_offset+scissor_img.shape[0], x_offset:x_offset+scissor_img.shape[1]] = scissor_img
+
+    if rps_display == "rock":
+        img[y_offset:y_offset+rock_img.shape[0], x_offset:x_offset+rock_img.shape[1]] = rock_img
+    if rps_display == "paper":
+        img[y_offset:y_offset+paper_img.shape[0], x_offset:x_offset+paper_img.shape[1]] = paper_img
+    if rps_display == "scissor":
+        img[y_offset:y_offset+scissor_img.shape[0], x_offset:x_offset+scissor_img.shape[1]] = scissor_img
     # Display keypoint and result of rock paper scissor game
     cv2.imshow('Game: Rock Paper Scissor', disp.draw_game_rps(img.copy(), param))
 
