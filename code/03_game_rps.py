@@ -11,6 +11,7 @@ import time
 from playsound import playsound
 
 from threading import Thread
+from threading import active_count
 from utils_display import DisplayHand
 from utils_mediapipe import MediaPipeHand
 from utils_joint_angle import GestureRecognition
@@ -185,7 +186,7 @@ while cap.isOpened():
     
     cv2.imshow('Game: Rock Paper Scissor', disp.draw_game_rps(img.copy(), param))
 
-    print(f"LOGS: checkwin:{check_win} , start_game:{start_game}, count_down:{count_down}, start_count_down:{start_count_down}, soundEffectFlag:{soundeffectFlag}")
+    print(f"LOGS: checkwin:{check_win} , start_game:{start_game}, count_down:{count_down}, start_count_down:{start_count_down}, soundEffectFlag:{soundeffectFlag}, thread_open:{active_count()}")
 
     key = cv2.waitKey(1)
     if key==27:
