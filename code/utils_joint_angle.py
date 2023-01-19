@@ -75,6 +75,7 @@ class GestureRecognition:
         elif mode=='eval':
             # Load training data
             file = np.genfromtxt('../data/gesture_train.csv', delimiter=',')
+            print(file)
             # Extract input joint angles
             angle = file[:,:-1].astype(np.float32)
             # Extract output class label

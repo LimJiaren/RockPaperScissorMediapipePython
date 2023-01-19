@@ -1,10 +1,3 @@
-###############################################################################
-### Simple demo on playing rock paper scissor
-### Input : Live video of 2 hands playing rock paper scissor
-### Output: 2D display of hand keypoint 
-###         with gesture classification (rock=fist, paper=five, scissor=three/yeah)
-###############################################################################
-
 import cv2
 import random
 import time
@@ -70,7 +63,7 @@ while cap.isOpened():
     # Feedforward to extract keypoint
     param = pipe.forward(img)
     # Evaluate gesture for all hands
-
+    print(param)
     for p in param:
         if p['class'] is not None:
             p['gesture'] = gest.eval(p['angle'])
@@ -186,7 +179,7 @@ while cap.isOpened():
     
     cv2.imshow('Game: Rock Paper Scissor', disp.draw_game_rps(img.copy(), param))
 
-    print(f"LOGS: checkwin:{check_win} , start_game:{start_game}, count_down:{count_down}, start_count_down:{start_count_down}, soundEffectFlag:{soundeffectFlag}, thread_open:{active_count()}")
+    # print(f"LOGS: checkwin:{check_win} , start_game:{start_game}, count_down:{count_down}, start_count_down:{start_count_down}, soundEffectFlag:{soundeffectFlag}, thread_open:{active_count()}")
 
     key = cv2.waitKey(1)
     if key==27:
